@@ -18,9 +18,10 @@ with the TPOT library. If not, see http://www.gnu.org/licenses/.
 
 """
 
-from .base import *
-from .select_kbest import *
-#from .relieff import *
-#from .surf import *
-#from .surfstar import *
-from .ekf_source import *
+
+class CombineDFs(object):
+    """Operator to combine two DataFrames"""
+
+    @property
+    def __name__(self):
+        return self.__class__.__name__

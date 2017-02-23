@@ -18,9 +18,29 @@ with the TPOT library. If not, see http://www.gnu.org/licenses/.
 
 """
 
-from .base import *
-from .select_kbest import *
-#from .relieff import *
-#from .surf import *
-#from .surfstar import *
-from .ekf_source import *
+from .base import Selector
+from skrebate import ReliefF
+
+
+class TPOTReliefF(Selector):
+    """Uses ReliefF as an expert knowledge source to subset the feature set
+
+    Parameters
+    ----------
+    k: int
+        The top k features to keep from the original set of features in the training data
+
+    """
+    import_hash = {'skrebate': ['ReliefF']}
+    sklearn_class = ReliefF
+    arg_types = (int, )
+
+    def __init__(self):
+        pass
+
+    def preprocess_args(self, n_features_to_select):
+        n_features_to_select = max(1, n_features_to_select)
+
+        return {
+            'n_features_to_select': n_features_to_select
+        }

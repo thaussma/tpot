@@ -18,9 +18,12 @@ with the TPOT library. If not, see http://www.gnu.org/licenses/.
 
 """
 
-from .base import *
-from .select_kbest import *
-#from .relieff import *
-#from .surf import *
-#from .surfstar import *
-from .ekf_source import *
+from tpot.operators import Operator
+
+
+class Selector(Operator):
+    """Parent class for Feature Selectors in TPOT"""
+
+    root = False  # Whether this operator type can be the root of the tree
+    regression = True  # Whether this operator can be used in a regression problem
+    classification = True  # Whether the operator can be used for classification
