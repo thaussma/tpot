@@ -82,7 +82,7 @@ class TPOTBase(BaseEstimator):
                  scoring=None, cv=5, n_jobs=1,
                  max_time_mins=None, max_eval_time_mins=5,
                  random_state=None, config_dict=None, warm_start=False,
-                 verbosity=0, disable_update_check=False):
+                 verbosity=0, disable_update_check=False, groups=None):
         """Sets up the genetic programming algorithm for pipeline optimization.
 
         Parameters
@@ -281,6 +281,7 @@ class TPOTBase(BaseEstimator):
                 self.scoring_function = scoring
 
         self.cv = cv
+        self.groups = groups
         # If the OS is windows, reset cpu number to 1 since the OS did not have multiprocessing module
         if sys.platform.startswith('win') and n_jobs != 1:
             print('Warning: Although parallelization is currently supported in TPOT for Windows, '
@@ -754,7 +755,7 @@ class TPOTBase(BaseEstimator):
         for chunk_idx in range(0, len(sklearn_pipeline_list),self.n_jobs*4):
             parallel = Parallel(n_jobs=self.n_jobs, verbose=0, pre_dispatch='2*n_jobs')
             tmp_result_score = parallel(delayed(_wrapped_cross_val_score)(sklearn_pipeline, features, classes,
-                                         self.cv, self.scoring_function, sample_weight, self.max_eval_time_mins)
+                                         self.cv, self.scoring_function, sample_weight, self.max_eval_time_mins, self.groups)
                       for sklearn_pipeline in sklearn_pipeline_list[chunk_idx:chunk_idx+self.n_jobs*4])
             # update pbar
             for val in tmp_result_score:
